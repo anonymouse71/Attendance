@@ -2,8 +2,10 @@ package com.ryanjackman.attendence;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,12 +32,14 @@ public class MainActivity extends Activity implements Serializable {
 		setContentView(R.layout.activity_main);
 
 		// Clear focus from text field so keyboard does not open
-		findViewById(R.id.addText).clearFocus();
+		//findViewById(R.id.addText).clearFocus();
 
 		if (listView == null)
 			listView = (ListView) findViewById(R.id.listView1);
 		if (adapter == null)
 			displayListView();
+		
+		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		listView.setAdapter(adapter);
 	}
 
@@ -47,6 +50,11 @@ public class MainActivity extends Activity implements Serializable {
 		return true;
 	}
 
+	public static void addItem(ListItem i){
+		adapter.add(i);
+		adapter.notifyDataSetChanged();
+	}
+	
 	private void displayListView() {
 
 		ArrayList<ListItem> itemList = new ArrayList<ListItem>();
@@ -70,6 +78,9 @@ public class MainActivity extends Activity implements Serializable {
 	}
 
 	public void addItem(View view) {
+		Intent i = new Intent(this, ItemActivity.class);
+		startActivity(i);
+		/*
 		EditText editText1 = (EditText) findViewById(R.id.addText);
 		if (!editText1.getText().toString().trim().equals("")) {
 			adapter.itemList.add(new ListItem(editText1.getText().toString(),
@@ -79,10 +90,10 @@ public class MainActivity extends Activity implements Serializable {
 		} else {
 			Toast.makeText(getApplicationContext(), "Cannot add empty string.",
 					Toast.LENGTH_SHORT).show();
-		}
+		}*/
 	}
 
-	private class AttendenceAdapter extends ArrayAdapter<ListItem> implements
+	class AttendenceAdapter extends ArrayAdapter<ListItem> implements
 			Serializable {
 
 		private static final long serialVersionUID = -885419344671893557L;
@@ -98,10 +109,6 @@ public class MainActivity extends Activity implements Serializable {
 			TextView text;
 			TextView subText;
 			CheckBox cBox;
-		}
-
-		public ArrayList<ListItem> getList() {
-			return itemList;
 		}
 
 		@Override
@@ -123,14 +130,6 @@ public class MainActivity extends Activity implements Serializable {
 
 				holder.cBox.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
-						CheckBox cb = (CheckBox) v;
-						ListItem country = (ListItem) cb.getTag();
-						Toast.makeText(
-								getApplicationContext(),
-								"Clicked on Checkbox: " + cb.getText() + " is "
-										+ cb.isChecked(), Toast.LENGTH_LONG)
-								.show();
-						country.setSelected(cb.isChecked());
 					}
 				});
 			} else {
