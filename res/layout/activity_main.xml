@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="beforeDescendants"
+	android:focusableInTouchMode="true"
+    tools:context=".MainActivity" >
+    
+    <Button
+        android:id="@+id/buttonAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/addText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:onClick="addItem"
+        android:text="@string/buttonAdd" />
+
+    <EditText
+        android:id="@+id/addText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/buttonAdd"
+        android:ems="10"
+        android:inputType="text" >
+
+        <requestFocus />
+    </EditText>
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addText"
+        android:focusable="true"
+        android:freezesText="true" >
+
+    </ListView>
+
+</RelativeLayout>
