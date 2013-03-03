@@ -25,8 +25,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.ryanjackman.attendence.ItemActivity"
-            android:label="@string/title_activity_item" >
+            android:name="com.ryanjackman.attendence.AddActivity"
+            android:label="@string/title_activity_add" >
         </activity>
     </application>
 

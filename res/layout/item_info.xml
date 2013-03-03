@@ -6,30 +6,31 @@
     android:padding="6dip" >
  
     <CheckBox
-        android:id="@+id/checkBox1"
+        android:id="@+id/list_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/list_subtext"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:focusable="false"
         android:focusableInTouchMode="false" />
 
     <TextView
-        android:id="@+id/text"
+        android:id="@+id/list_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/checkBox1"
-        android:layout_toRightOf="@+id/checkBox1"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/list_checkbox"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/subText"
+        android:id="@+id/list_subtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/text"
-        android:layout_alignRight="@+id/text"
-        android:layout_below="@+id/text"
+        android:layout_alignLeft="@+id/list_text"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/list_text"
         android:paddingLeft="10dp" />
  
 </RelativeLayout>
