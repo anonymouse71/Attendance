@@ -10,5 +10,7 @@
     <string name="button_save">Save</string>
     <string name="hint_title">Title</string>
     <string name="hint_info">Additional Information</string>
+    <string name="context_edit">Edit</string>
+    <string name="context_delete">Delete</string>
 
 </resources>

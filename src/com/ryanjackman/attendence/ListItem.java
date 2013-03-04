@@ -5,9 +5,9 @@ import android.os.Parcelable;
 
 public class ListItem implements Parcelable {
 	
-	String text = null;
-	String subText = null;
-	boolean selected = false;
+	private String text = null;
+	private String subText = null;
+	private boolean selected = false;
 	
 	public ListItem(String text, String subText){
 		this.text = text;
@@ -25,7 +25,7 @@ public class ListItem implements Parcelable {
 	}
 
 	public void setText(String text) {
-		this.text = text + "\n" + subText;
+		this.text = text;
 	}
 
 	public String getSubText() {

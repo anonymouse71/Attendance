@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements Serializable {
 
@@ -27,6 +31,9 @@ public class MainActivity extends Activity implements Serializable {
 		if (adapter == null)
 			displayListView();
 		listView.setAdapter(adapter);
+		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+
+		this.registerForContextMenu(listView);
 	}
 
 	@Override
@@ -34,6 +41,36 @@ public class MainActivity extends Activity implements Serializable {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+
+		switch (item.getItemId()) {
+		case R.id.context_edit:
+			Intent intent = new Intent(this, AddActivity.class);
+			ListItem i = (ListItem) listView.getItemAtPosition(info.position);
+			intent.putExtra("text", i.getText());
+			intent.putExtra("subtext", i.getSubText());
+			intent.putExtra("position", info.position);
+			Toast.makeText(getBaseContext(), "" + i.getText() + i.getSubText(), Toast.LENGTH_SHORT).show();
+			startActivity(intent);
+			break;
+		case R.id.context_delete:
+			adapter.remove(adapter.getItem(info.position));
+			break;
+		default:
+			return super.onContextItemSelected((MenuItem) item);
+		}
+		return false;
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.context_menu, menu);
 	}
 
 	private void displayListView() {
@@ -50,19 +87,37 @@ public class MainActivity extends Activity implements Serializable {
 		// Assign adapter to ListView
 		listView.setAdapter(adapter);
 
-		listView.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-			}
-		});
+		/*
+		 * Intent intent = new Intent("com.ryanjackman.attendence.AddActivity");
+		 * ListItem item = (ListItem) listView.getItemAtPosition(position);
+		 * intent.putExtra("text", item.getText()); intent.putExtra("subText",
+		 * item.getSubText()); intent.putExtra("position", position);
+		 * view.getContext().startActivity(intent);
+		 */
+		// return true;
+		// }
+		// });
 	}
 
 	public void addItem(View view) {
 		Intent i = new Intent(this, AddActivity.class);
 		startActivity(i);
 	}
-	
-	public static void add(ListItem i){
+
+	public void editItem(int position) {
+		Intent i = new Intent(this, AddActivity.class);
+
+		startActivity(i);
+	}
+
+	public static void add(ListItem i) {
 		adapter.add(i);
+	}
+
+	public static void set(ListItem i, int position) {
+		ListItem item = (ListItem) listView.getItemAtPosition(position);
+		item.setText(i.getText());
+		item.setSubText(i.getSubText());
+		item.setSelected(i.isSelected());
 	}
 }
