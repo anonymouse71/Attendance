@@ -1,7 +1,9 @@
-package com.ryanjackman.attendence;
+package com.ryanjackman.attendance;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.ryanjackman.attendance.R;
 
 import android.app.Activity;
 import android.content.Context;

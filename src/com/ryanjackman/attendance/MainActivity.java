@@ -1,7 +1,11 @@
-package com.ryanjackman.attendence;
+package com.ryanjackman.attendance;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import com.ryanjackman.attendance.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +25,8 @@ public class MainActivity extends Activity implements Serializable {
 
 	private static AttendanceAdapter adapter = null;
 	private static ListView listView;
+	
+	private static String file = "storage.txt";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,12 +34,41 @@ public class MainActivity extends Activity implements Serializable {
 		setContentView(R.layout.activity_main);
 
 		listView = (ListView) findViewById(R.id.list_view);
-		if (adapter == null)
-			displayListView();
-		listView.setAdapter(adapter);
+		ArrayList<ListItem> itemList = null;
+		if (adapter == null){
+			try {
+				itemList = StorageHandler.retrieve(this, file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
+		}
+		if( itemList == null )
+			initListView();
+		else{
+			adapter = new AttendanceAdapter(this, R.layout.item_info, itemList);
+			listView.setAdapter(adapter);
+		}
+		
 		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 
 		this.registerForContextMenu(listView);
+		
+		try {
+			StorageHandler.store(this, adapter.itemList, file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		try {
+			StorageHandler.store(this, adapter.itemList, file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -73,7 +108,7 @@ public class MainActivity extends Activity implements Serializable {
 		inflater.inflate(R.menu.context_menu, menu);
 	}
 
-	private void displayListView() {
+	private void initListView() {
 
 		ArrayList<ListItem> itemList = new ArrayList<ListItem>();
 		itemList.add(new ListItem("ONE", "one"));
@@ -87,16 +122,6 @@ public class MainActivity extends Activity implements Serializable {
 		// Assign adapter to ListView
 		listView.setAdapter(adapter);
 
-		/*
-		 * Intent intent = new Intent("com.ryanjackman.attendence.AddActivity");
-		 * ListItem item = (ListItem) listView.getItemAtPosition(position);
-		 * intent.putExtra("text", item.getText()); intent.putExtra("subText",
-		 * item.getSubText()); intent.putExtra("position", position);
-		 * view.getContext().startActivity(intent);
-		 */
-		// return true;
-		// }
-		// });
 	}
 
 	public void addItem(View view) {
