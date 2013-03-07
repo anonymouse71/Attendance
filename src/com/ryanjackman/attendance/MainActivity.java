@@ -3,9 +3,6 @@ package com.ryanjackman.attendance;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import com.ryanjackman.attendance.R;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,7 +22,7 @@ public class MainActivity extends Activity implements Serializable {
 
 	private static AttendanceAdapter adapter = null;
 	private static ListView listView;
-	
+
 	private static String file = "storage.txt";
 
 	@Override
@@ -34,30 +31,14 @@ public class MainActivity extends Activity implements Serializable {
 		setContentView(R.layout.activity_main);
 
 		listView = (ListView) findViewById(R.id.list_view);
-		ArrayList<ListItem> itemList = null;
-		if (adapter == null){
-			try {
-				itemList = StorageHandler.retrieve(this, file);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}			
-		}
-		if( itemList == null )
+		if (adapter == null)
 			initListView();
-		else{
-			adapter = new AttendanceAdapter(this, R.layout.item_info, itemList);
-			listView.setAdapter(adapter);
-		}
-		
+		listView.setAdapter(adapter);
 		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 
 		this.registerForContextMenu(listView);
+
 		
-		try {
-			StorageHandler.store(this, adapter.itemList, file);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
@@ -111,17 +92,25 @@ public class MainActivity extends Activity implements Serializable {
 	private void initListView() {
 
 		ArrayList<ListItem> itemList = new ArrayList<ListItem>();
-		itemList.add(new ListItem("ONE", "one"));
+		/*itemList.add(new ListItem("ONE", "one"));
 		itemList.add(new ListItem("TWO", "two"));
 		itemList.add(new ListItem("THREE", "three"));
 		for (int i = 4; i < 20; i++)
-			itemList.add(new ListItem("" + i, "" + i));
+			itemList.add(new ListItem("" + i, "" + i));*/
+		
+		try {
+			itemList = StorageHandler.retrieve(this, file);
+		} catch (IOException e) {
+			itemList.add(new ListItem("ONE", "one"));
+			itemList.add(new ListItem("TWO", "two"));
+			itemList.add(new ListItem("THREE", "three"));
+			e.printStackTrace();
+		}
 
 		// create an ArrayAdaptar from the String Array
 		adapter = new AttendanceAdapter(this, R.layout.item_info, itemList);
 		// Assign adapter to ListView
 		listView.setAdapter(adapter);
-
 	}
 
 	public void addItem(View view) {
@@ -131,7 +120,6 @@ public class MainActivity extends Activity implements Serializable {
 
 	public void editItem(int position) {
 		Intent i = new Intent(this, AddActivity.class);
-
 		startActivity(i);
 	}
 
@@ -144,5 +132,6 @@ public class MainActivity extends Activity implements Serializable {
 		item.setText(i.getText());
 		item.setSubText(i.getSubText());
 		item.setSelected(i.isSelected());
+		adapter.notifyDataSetChanged();
 	}
 }

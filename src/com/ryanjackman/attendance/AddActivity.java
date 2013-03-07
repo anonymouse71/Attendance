@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class AddActivity extends Activity {
-	
+
 	private int position;
 
 	@Override
@@ -16,7 +17,7 @@ public class AddActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add);
 
-		handleIntent(getIntent());		
+		handleIntent(getIntent());
 	}
 
 	private void handleIntent(Intent intent) {
@@ -27,7 +28,7 @@ public class AddActivity extends Activity {
 			text = extras.getString("text");
 			subText = extras.getString("subtext");
 			position = extras.getInt("position");
-		} else 
+		} else
 			return;
 
 		EditText t = (EditText) findViewById(R.id.text_box);
@@ -49,11 +50,22 @@ public class AddActivity extends Activity {
 		EditText t = (EditText) findViewById(R.id.text_box);
 		EditText s = (EditText) findViewById(R.id.subtext_box);
 
+		if (t.getText().toString().trim().equals("")) {
+			Toast.makeText(this, "No Title Entered!", Toast.LENGTH_LONG).show();
+			return;
+		}
+		if (t.getText().toString().contains(StorageHandler.TOKEN)
+				|| s.getText().toString().contains(StorageHandler.TOKEN)) {
+			Toast.makeText(this,
+					"You may not include \"" + StorageHandler.TOKEN + "\" in either Title, or Additional Information",
+					Toast.LENGTH_LONG).show();
+			return;
+		}
+
 		if (position != -1) {
 			MainActivity.set(new ListItem(t.getText().toString(), s.getText().toString()), position);
 		} else
 			MainActivity.add(new ListItem(t.getText().toString(), s.getText().toString()));
 		finish();
 	}
-
 }

@@ -8,25 +8,26 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
-
 import android.content.Context;
 import android.util.Log;
 
 public class StorageHandler {
+	
+	public static final String TOKEN = "*";
 
-	public static boolean store(MainActivity main, ArrayList<ListItem> list, String file) throws IOException {
+	public static void store(MainActivity main, ArrayList<ListItem> list, String file) throws IOException {
 
 		FileOutputStream fOut = main.openFileOutput(file, Context.MODE_PRIVATE);
 		OutputStreamWriter out = new OutputStreamWriter(fOut);
 
 		for (ListItem t : list) {
-			out.write(t.getText() + "*" + t.getSubText() + "*" + t.isSelected() + "\n");
+			out.write(t.getText() + TOKEN + t.getSubText() + TOKEN + t.isSelected() + "\n");
 		}
 
 		out.flush();
 		out.close();
-
-		return false;
+		
+		Log.i("File Reading stuff", "saved!");
 	}
 
 	public static ArrayList<ListItem> retrieve(MainActivity main, String file) throws IOException {
@@ -43,7 +44,7 @@ public class StorageHandler {
 
 		String line;
 		while ((line = in.readLine()) != null) {
-			StringTokenizer tokenizer = new StringTokenizer(line, "*");
+			StringTokenizer tokenizer = new StringTokenizer(line, TOKEN);
 			
 			Log.i("File Reading stuff", line);
 
