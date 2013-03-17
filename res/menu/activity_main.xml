@@ -3,7 +3,12 @@
     <item
         android:id="@+id/menu_settings"
         android:orderInCategory="100"
-        android:showAsAction="never"
+        android:showAsAction="ifRoom"
         android:title="@string/menu_settings"/>
+    <item
+        android:id="@+id/menu_export"
+        android:orderInCategory="50"
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_export"/>
 
 </menu>

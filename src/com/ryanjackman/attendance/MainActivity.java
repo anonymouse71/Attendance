@@ -3,9 +3,13 @@ package com.ryanjackman.attendance;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -24,6 +28,8 @@ public class MainActivity extends Activity implements Serializable {
 	private static ListView listView;
 
 	private static String file = "storage.txt";
+	
+	private static MainActivity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +43,10 @@ public class MainActivity extends Activity implements Serializable {
 		listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 
 		this.registerForContextMenu(listView);
-
 		
+		if(activity == null)
+			activity = this;
+
 	}
 
 	@Override
@@ -47,7 +55,6 @@ public class MainActivity extends Activity implements Serializable {
 		try {
 			StorageHandler.store(this, adapter.itemList, file);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -57,6 +64,47 @@ public class MainActivity extends Activity implements Serializable {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.activity_main, menu);
 		return true;
+	}
+
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+
+		case R.id.menu_export:
+			String state = Environment.getExternalStorageState();
+			if (Environment.MEDIA_MOUNTED.equals(state)) {
+				AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+
+				// Setting Dialog Title
+				
+				
+				alertDialog.setTitle("Confirm Export...");
+
+				// Setting Dialog Message
+				alertDialog.setMessage("Are you sure you want to export this list to  ?");
+
+				// Setting Positive "Yes" Button
+				alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						StorageHandler.export(activity, adapter.itemList);
+					}
+				});
+
+				// Setting Negative "NO" Button
+				alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
+						return;
+					}
+				});
+
+				// Showing Alert Message
+				alertDialog.show();
+			}
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return false;
 	}
 
 	@Override
@@ -92,18 +140,15 @@ public class MainActivity extends Activity implements Serializable {
 	private void initListView() {
 
 		ArrayList<ListItem> itemList = new ArrayList<ListItem>();
-		/*itemList.add(new ListItem("ONE", "one"));
-		itemList.add(new ListItem("TWO", "two"));
-		itemList.add(new ListItem("THREE", "three"));
-		for (int i = 4; i < 20; i++)
-			itemList.add(new ListItem("" + i, "" + i));*/
-		
+
 		try {
 			itemList = StorageHandler.retrieve(this, file);
 		} catch (IOException e) {
 			itemList.add(new ListItem("ONE", "one"));
 			itemList.add(new ListItem("TWO", "two"));
 			itemList.add(new ListItem("THREE", "three"));
+			for (int i = 4; i < 20; i++)
+				itemList.add(new ListItem("" + i, "" + i));
 			e.printStackTrace();
 		}
 
@@ -125,6 +170,7 @@ public class MainActivity extends Activity implements Serializable {
 
 	public static void add(ListItem i) {
 		adapter.add(i);
+		listView.setSelection(adapter.itemList.size() - 1);
 	}
 
 	public static void set(ListItem i, int position) {
