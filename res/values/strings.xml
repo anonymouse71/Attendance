@@ -11,5 +11,8 @@
     <string name="hint_info">Additional Information</string>
     <string name="context_edit">Edit</string>
     <string name="context_delete">Delete</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_export">Export</string>
+    <string name="file_name">filename.xls</string>
 
 </resources>

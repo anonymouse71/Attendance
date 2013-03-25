@@ -5,8 +5,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -73,38 +71,21 @@ public class MainActivity extends Activity implements Serializable {
 		case R.id.menu_export:
 			String state = Environment.getExternalStorageState();
 			if (Environment.MEDIA_MOUNTED.equals(state)) {
-				AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-
-				// Setting Dialog Title
-				
-				
-				alertDialog.setTitle("Confirm Export...");
-
-				// Setting Dialog Message
-				alertDialog.setMessage("Are you sure you want to export this list to  ?");
-
-				// Setting Positive "Yes" Button
-				alertDialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						StorageHandler.export(activity, adapter.itemList);
-					}
-				});
-
-				// Setting Negative "NO" Button
-				alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						return;
-					}
-				});
-
-				// Showing Alert Message
-				alertDialog.show();
+				Intent intent = new Intent(activity, ExportActivity.class);
+				startActivity(intent);
+			}
+			else{
+				Toast.makeText(this, "No external media found. Cannot export.", Toast.LENGTH_LONG).show();
 			}
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 		return false;
+	}
+	
+	public static AttendanceAdapter getAdapter(){
+		return adapter;
 	}
 
 	@Override
