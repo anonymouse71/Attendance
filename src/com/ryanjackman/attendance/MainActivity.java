@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity implements Serializable {
 
+    //Comment
+
 	private static final long serialVersionUID = -8275037861228299238L;
 
 	private static AttendanceAdapter adapter = null;
@@ -95,8 +97,9 @@ public class MainActivity extends Activity implements Serializable {
 		switch (item.getItemId()) {
 		case R.id.context_edit:
 			Intent intent = new Intent(this, AddActivity.class);
-			ListItem i = (ListItem) listView.getItemAtPosition(info.position);
-			intent.putExtra("text", i.getText());
+			ListItem i;
+            i = (ListItem) listView.getItemAtPosition(info.position);
+            intent.putExtra("text", i.getText());
 			intent.putExtra("subtext", i.getSubText());
 			intent.putExtra("position", info.position);
 			Toast.makeText(getBaseContext(), "" + i.getText() + i.getSubText(), Toast.LENGTH_SHORT).show();
